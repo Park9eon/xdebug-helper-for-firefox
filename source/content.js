@@ -4,7 +4,7 @@ var xdebug = (function() {
 	{
 		var exp = new Date();
 		exp.setTime(exp.getTime() + (days * 24 * 60 * 60 * 1000));
-		document.cookie = name + "=" + value + "; expires=" + exp.toGMTString() + "; path=/";
+		document.cookie = name + "=" + value + "; expires=" + exp.toGMTString() + "; path=/;";
 	}
 
 	// Get the content in a cookie
@@ -46,7 +46,8 @@ var xdebug = (function() {
 			var newStatus,
 				idekey = "XDEBUG_ECLIPSE",
 				traceTrigger = idekey,
-				profileTrigger = idekey;
+				profileTrigger = idekey,
+				domain = null;
 
 			// Use the IDE key from the request, if any is given
 			if (request.idekey)
@@ -61,6 +62,10 @@ var xdebug = (function() {
 			{
 				profileTrigger = request.profileTrigger;
 			}
+			if (request.domain)
+			{
+				domain = request.domain;
+			}
 
 			// Execute the requested command
 			if (request.cmd == "getStatus")
@@ -69,11 +74,11 @@ var xdebug = (function() {
 			}
 			else if (request.cmd == "toggleStatus")
 			{
-				newStatus = exposed.toggleStatus(idekey, traceTrigger, profileTrigger);
+				newStatus = exposed.toggleStatus(idekey, traceTrigger, profileTrigger, domain);
 			}
 			else if (request.cmd == "setStatus")
 			{
-				newStatus = exposed.setStatus(request.status, idekey, traceTrigger, profileTrigger);
+				newStatus = exposed.setStatus(request.status, idekey, traceTrigger, profileTrigger, domain);
 			}
 
 			// Respond with the current status
@@ -102,15 +107,17 @@ var xdebug = (function() {
 		},
 
 		// Toggle to the next state
-		toggleStatus : function(idekey, traceTrigger, profileTrigger)
+		toggleStatus : function(idekey, traceTrigger, profileTrigger, domain)
 		{
 			var nextStatus = (exposed.getStatus(idekey, traceTrigger, profileTrigger) + 1) % 4;
-			return exposed.setStatus(nextStatus, idekey, traceTrigger, profileTrigger);
+			return exposed.setStatus(nextStatus, idekey, traceTrigger, profileTrigger, domain);
 		},
 
 		// Set the state
-		setStatus : function(status, idekey, traceTrigger, profileTrigger)
+		setStatus : function(status, idekey, traceTrigger, profileTrigger, domain)
 		{
+			idekey += (domain ? "; domain=" + domain : '');
+
 			if (status == 1)
 			{
 				// Set debugging on
@@ -140,9 +147,16 @@ var xdebug = (function() {
 				deleteCookie("XDEBUG_PROFILE");
 				deleteCookie("XDEBUG_TRACE");
 			}
-
 			// Return the new status
 			return exposed.getStatus(idekey, traceTrigger, profileTrigger);
+		},
+		eval: function () {
+			var cookie = getCookie('XDEBUG_SESSION');
+			if (cookie) {
+				chrome.storage.local.get(['xdebugEvalScript'], function (result) {
+					eval(result.xdebugEvalScript);
+				});
+			}
 		}
 	};
 
@@ -151,3 +165,4 @@ var xdebug = (function() {
 
 // Attach the message listener
 chrome.runtime.onMessage.addListener(xdebug.messageListener);
+xdebug.eval();

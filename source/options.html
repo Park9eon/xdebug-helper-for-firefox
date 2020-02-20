@@ -5,8 +5,13 @@
 		<title>Xdebug helper</title>
 
 		<link rel="stylesheet" href="options.css">
+		<link rel="stylesheet" href="node_modules/codemirror/lib/codemirror.css">
+		<link rel="stylesheet" href="node_modules/codemirror/theme/material-darker.css">
 
-		<script type="text/javascript" src="jquery.js"></script>
+		<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="node_modules/keymaster/keymaster.js"></script>
+		<script type="text/javascript" src="node_modules/codemirror/lib/codemirror.js"></script>
+		<script type="text/javascript" src="node_modules/codemirror/mode/javascript/javascript.js"></script>
 		<script type="text/javascript" src="options.js"></script>
 	</head>
 
@@ -50,7 +55,6 @@
 				<input type="text" id="tracetrigger" value="">
 				<button class="save-button">Save</button>
 			</p>
-
 			<h3>Profile Trigger Value</h3>
 			<p class="note">If your xdebug is configured with a unique profile trigger key,
 				set that value here.  This value is blank by default.</p>
@@ -58,6 +62,15 @@
 				<input type="text" id="profiletrigger" value="">
 				<button class="save-button">Save</button>
 			</p>
+			<h3>Domain</h3>
+			<p>
+				<input type="text" id="domain" value="">
+				<button class="save-button">Save</button>
+			</p>
+			<h3>자동실행 자바스크립트</h3>
+			<p class="note">디버깅이 실행되는 동안 Javascript 코드 실행</p>
+			<div id="code"></div>
+			<button class="save-button">Save</button>
 			<footer id="footer">
 				<a href="https://github.com/briangilbert/xdebug-helper-for-firefox" class="contribute" target="_blank">
 					Feel free to submit ideas, bugs and pull request to our <span>Github project</span>

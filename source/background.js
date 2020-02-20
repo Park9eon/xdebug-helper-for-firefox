@@ -65,6 +65,7 @@ chrome.commands.onCommand.addListener(function(command)
 		var ideKey = "XDEBUG_ECLIPSE";
 		var traceTrigger = ideKey;
 		var profileTrigger = ideKey;
+		var domain = null;
 
 		// Check if localStorage is available and get the settings out of it
 		if (localStorage)
@@ -83,6 +84,11 @@ chrome.commands.onCommand.addListener(function(command)
 			{
 				profileTrigger = localStorage["xdebugProfileTrigger"];
 			}
+
+			if (localStorage["xdebugDomain"])
+			{
+				domain = localStorage["xdebugDomain"];
+			}
 		}
 
 		// Fetch the active tab
@@ -100,7 +106,7 @@ chrome.commands.onCommand.addListener(function(command)
 					cmd: "getStatus",
 					idekey: ideKey,
 					traceTrigger: traceTrigger,
-					profileTrigger: profileTrigger
+					profileTrigger: profileTrigger,
 				},
 				function(response)
 				{
@@ -114,7 +120,8 @@ chrome.commands.onCommand.addListener(function(command)
 							status: newState,
 							idekey: ideKey,
 							traceTrigger: traceTrigger,
-							profileTrigger: profileTrigger
+							profileTrigger: profileTrigger,
+							domain: domain,
 						},
 						function(response)
 						{

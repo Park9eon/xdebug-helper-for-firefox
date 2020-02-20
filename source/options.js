@@ -1,8 +1,19 @@
+var codeMirror = null;
+
 function save_options()
 {
 	localStorage["xdebugIdeKey"] = document.getElementById("idekey").value;
 	localStorage["xdebugTraceTrigger"] = document.getElementById("tracetrigger").value;
 	localStorage["xdebugProfileTrigger"] = document.getElementById("profiletrigger").value;
+	localStorage["xdebugDomain"] = document.getElementById("domain").value;
+	if (codeMirror != null) {
+		localStorage["xdebugEvalScript"] = codeMirror.getValue();
+		chrome.storage.local.set({
+			xdebugEvalScript: codeMirror.getValue()
+		}, function() {
+
+		});
+	}
 }
 
 function restore_options()
@@ -42,6 +53,17 @@ function restore_options()
 	} else {
 		$("#profiletrigger").val(null);
 	}
+
+	var evalScript = localStorage["xdebugEvalScript"];
+	if (evalScript == null) {
+		evalScript = '';
+	}
+	codeMirror = CodeMirror(document.getElementById('code'), {
+		value: evalScript,
+		mode:  'javascript',
+		theme: 'material-darker',
+		lineNumbers: true,
+	});
 }
 
 $(function()

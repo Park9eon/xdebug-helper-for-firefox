@@ -1,0 +1,15 @@
+{
+  "name": "xdebug-helper-for-firefox",
+  "version": "1.0.6",
+  "description": "Easy debugging, profiling and tracing extension for Xdebug",
+  "main": "index.js",
+  "author": "Park9eon",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "codemirror": "^5.51.0",
+    "jquery": "^3.4.1",
+    "keymaster": "^1.6.2",
+    "preact": "^10.3.2"
+  }
+}
